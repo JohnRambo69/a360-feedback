@@ -1,0 +1,254 @@
+<html>
+<body ng-app="a360" ng-controller="SessionController">
+<style>
+    .strike {
+        color:#3c763d;
+        background-color:#dff0d8;
+        border-color:#d6e9c6
+    }
+    .has-error {
+        color:#a94442;
+        background-color:#f2dede;
+        border-color:#ebccd1
+
+    }
+</style>
+<br>
+<div ng-app="a360" data-ng-form="sessionForm" ng-init="init()" class="container text-center">
+    <div>
+        <center style="border: #999999 solid;background-color:#cccccc"><h1>Create - 360 Feedback Session</h1></center>
+    </div>
+    <div style="border: #999999 solid">
+        <div class="row">
+            <center><h1>Details</h1></center>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-1 offset-md-1"></div>
+            <div class="col-md-3 offset-md-2"><h4>Feedback session name:</h4></div>
+            <div class="col-md-2"><input type="text" class="form-control" name="sessionName" placeholder="name..."
+                                         ng-required="true" ng-model="sessionName">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1 offset-md-1"></div>
+            <div class="col-md-3 offset-md-2"><h4>Feedback end date:</h4></div>
+            <div class="col-md-2 offset-md-2">
+                <p class="input-group">
+                    <input type="text" name="endDate" class="form-control" uib-datepicker-popup ng-model="endDate"
+
+                           is-open="endDatePopup.opened"
+                           datepicker-options="endDateOptions"
+                           data-ng-required="true"
+                           close-text="Close"/>
+                    <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="openEndDatePopup()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+                </p>
+            </div>
+        </div>
+        <div class="my" style="border: black">
+            <div class="row">
+              <h1>Participants</h1>
+            </div>
+            <br>
+
+            <div class="row">
+                <div class="col-md-3 "><h4>Participant email:</h4></div>
+                <div class ="col-md-3 ">
+                    <div class="row form-inline"  align="center">
+                     <input type="email" name="inputEmail" class="form-control" placeholder="name..."
+                       data-ng-required data-ng-pattern="emailPattern"
+                       aria-describedby="session_name"
+                       data-ng-model="inputEmail"/>
+                        <div ng-if=" sessionForm.inputEmail.$invalid"
+                             class="alert alert-danger" style="size: 20px">
+                            Invalid email
+                        </div>
+
+                        <input style="visibility: {{showXInput}}" type="file" id="docpicker" ng-click="showHideXButton()" class="btn btn-block" accept=".csv,application/vnd.ms-excel,.xlt,application/vnd.ms-excel,.xla,application/vnd.ms-excel,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.xltx,application/vnd.openxmlformats-officedocument.spreadsheetml.template,.xlsm,application/vnd.ms-excel.sheet.macroEnabled.12,.xltm,application/vnd.ms-excel.template.macroEnabled.12,.xlam,application/vnd.ms-excel.addin.macroEnabled.12,.xlsb,application/vnd.ms-excel.sheet.binary.macroEnabled.12">
+                        <button type="button" ng-if="showX" class="btn btn-primary" ng-click="addParticipantsFromFile(); showHideXButton();showHideXInput()">Add from file</button>
+
+                    </div>
+                    <br>
+                </div>
+
+               <div class="row">
+
+                   <button style="display: inline-block ;float: left" type="button" class="btn btn-primary" ng-click="addParticipant()"
+                           ng-disabled="sessionForm.inputEmail.$invalid">Add</button>
+      
+                   <button style="display: inline-block ;float: left; margin-left: 10px" type="button" class="btn btn-primary" ng-click="showHideXInput()"
+                           >Add From Excel File</button>
+     
+
+            <div>
+                <br>
+            </div>
+
+        </div>
+
+        <div class="col-xs-3 col-lg-offset-0">
+            <div class="row" align="center">
+                <button type="button" class="btn btn-default" ng-click="showHideMenu()" id="b1">
+                    <i class="glyphicon glyphicon-list-alt" ></i>
+                </button>
+                <label for="b1" data-ng-model="showMenuButton">{{showMenuButton}}</label>
+            </div>
+            <table table class="table table-bordered table-striped" style=" height: auto" ng-if="showMenu">
+                <tr>
+                    <th>Menu</th>
+                </tr>
+                <tr><th>
+
+                    <button type="button" class="btn btn-default" ng-click="showHideQuestions()" id="b2">
+                        <i class="glyphicon glyphicon-list-alt" ></i>
+                    </button>
+                    <label for="b1" data-ng-model="showQuestionsButton">{{showQuestionsButton}}</label>
+
+
+                </th></tr>
+                <tr><th>
+
+                    <button type="button" class="btn btn-default" ng-click="redirectToSessionPanel()" id="b3">
+                        <i class="glyphicon glyphicon-tasks" ></i>
+                    </button>
+                    <label for="b3">Show Sessions</label>
+                </th></tr>
+                <tr ng-if="showElement()"><th>
+                    <button  type="button" class="btn btn-default" ng-click="redirectToAdminPage()" id="b5">
+                        <i class="glyphicon glyphicon-user" ></i>
+                    </button>
+                    <label for="b5">Admin Panel</label>
+                </th></tr>
+
+                <tr><th>
+                    <button type="button" class="btn btn-default" ng-click="logOut()" id="b6">
+                        <i class="glyphicon glyphicon-off" ></i>
+                    </button>
+                    <label for="b6">Log Out</label>
+                </th></tr>
+            </table>
+
+        </div>
+        <div class="col-lg-5 col-lq-offset-0" ng-if="showQuestions">
+            <div class="form-inline text-center" align="centre" style="margin: auto">
+                <button type="button" class="btn btn-default" ng-click="questionValidator(1)" id="b7">
+                    <i class="glyphicon glyphicon-edit" ></i>
+                </button>
+                <label for="b7">Edit Questions</label>
+            </div>
+            <table class="table table-striped" style=" height: auto; margin: auto; border: white" name="questionsTable">
+                <tr>
+                    <th>#
+                    </th>
+                    <th>Question Text
+                    </th>
+                    <th>Default Answers
+                    </th>
+                    <th>Action
+                    </th>
+                <tr ng-repeat="question in questions" style="width: 300px" maxlength="500">
+                    <th scope="row" width="50">{{$index + 1}}</th>
+                    <td width="300">{{question.question_text}}</td>
+                    <td width="80">{{question.default_answers}}</td>
+                    <td width="=10"><a class="btn btn-xs delete-record"><i class="glyphicon glyphicon-trash" ng-click="deleteQuestion($index)"></i></a>
+                    </td>
+                </tr>
+                </tr>
+            </table>
+            <br>
+            <div ng-if="showQuestionEditor" name="questionDiv" ng-model="questionDiv" align="center">
+                <form class="row" style="size: 1000px">
+                    <label class="radio-inline"><input type="radio" name="optradio" value="0" ng-click="showRadioQuestions = false; clearConcatAnswer();setQuestionType(0)" checked>Text Question</label>
+                    <label class="radio-inline"><input type="radio" name="optradio" value="1" ng-click="showRadioQuestions = true;setQuestionType(1)">Radio Question</label>
+                </form>
+                <br>
+                <p style="width: 300px">Add new question text:</p>
+                <textarea class="form-control" maxlength="1000" name="textarea" id="textarea"
+                          style="resize: none; width: 300px; height: 70px" data-ng-model="questionTextArea"></textarea>
+                <span ng-show="questionTextArea === ''" class="alert-warning" >This field is mandatory.</span>
+                <br>
+
+                <br>
+
+                <div class="form" name="radioQuestions" ng-if="showRadioQuestions">
+                    <label for="answer1">Add Answer:</label>
+                    <br>
+                    <input type="text" class="form-inline" style="" name="answer1" id="answer1" data-ng-model="answer1">
+                    <br>
+                    <span ng-show="answer1 === ''" class="alert-warning" >This field is mandatory.</span>
+                    <div class="row" style="margin-left: 5px">
+                        <input type="button" class="btn btn-primary" ng-disabled="answer1 === ''" ng-click="addRadioQuestion(answer1); answer1 = null" value="Add radio questions"/>
+                    </div>
+                    <div class="row" style="margin-left: 5px">
+                        <label for="sp1">Current answers options:</label>
+                        <span id="sp1" data-ng-model="radioQuestionConcat">{{radioQuestionConcat}}</span>
+                    </div>
+                </div>
+
+                <br>
+                <span style="display: inline;">
+                    <button type="button" class="btn btn-primary " ng-disabled="questionTextArea === null"
+                            ng-click="insertQuestion(questionTextArea);questionTextArea = null; clearConcatAnswer()"
+                    >Add question
+                </button>
+                      <input type="button" class="btn btn-primary"ng-click="questionValidator(0);" value="Done"/>
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1 offset-md-2"></div>
+            <div class="input-group col-md-3">
+                <table class="table table-striped" id="participantsTable" style="width: 200px">
+                    <thead>
+                    <tr>
+                        <th>Lp</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="part in participants">
+                        <td class="col-md-2">{{$index+1}}</td>
+                        <td class="col-md-8">{{part.email}}</td>
+                        <td class="col-md-2" align="right">
+                            <a class="btn btn-xs delete-record"><i class="glyphicon glyphicon-trash" ng-click="removeParticipant($index)"></i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <div class=row >
+
+            <div data-a360-loading="" data-show="showSendSessionLoader"  >
+                <button type="button" class="btn btn-primary btn-lg" ng-disabled="canSendSession()" ng-click="createSession()" name="sendButton" >Send
+                </button>
+            </div>
+
+            <div data-a360-loading="">
+                <button type="button" class="btn btn-primary btn-lg" ng-click="logOut()" name="logOut" >Log Out
+                </button>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+    </div>
+    </div>
+</div>
+
+</div>
+</body>
+</html>
+
+
+
+
+
+

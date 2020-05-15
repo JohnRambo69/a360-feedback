@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>A360 Feedback</title>
+</head>
+
+<body data-ng-controller="SessionStatsController">
+<div ng-app="a360" ng-controller="SessionStatsController" name="myForm" novalidate ng-form>
+
+    <div class="title col-sm-12 ">
+        <h3 style="text-align: center; margin-top: 30px; margin-bottom: 50px; font-size: 30px">Session Information</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>Session name</th>
+                <th>Session end date</th>
+                <th>Is Freeze</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="session in sessions"  ng-model="sessions">
+
+                <td>{{$index +1}}</td>
+                <td>{{session.sessionName}}</td>
+                <td>{{session.endDate}}</td>
+                <td>{{session.isFreeze}}</td>
+                <td>
+                <button type="button" class="btn btn-default" ng-click="setSessionId($index);setSessionTableVisible();
+                        getQuestionsBySessionId(); getParticipantsBySessionId(); setButtonVisible()">
+                <i class="glyphicon glyphicon-hand-left" > Details</i>
+                </button>
+                    <button type="button" class="btn btn-default" ng-if="session.isFreeze === false && showElement()" ng-click="freezeUnfreeze(session.id, 'true')">
+                        <i class="glyphicon glyphicon-hand-left" > Freeze</i>
+                    </button>
+                    </button>
+                    <button type="button" class="btn btn-default" ng-if="session.isFreeze === true && showElement()" ng-click="freezeUnfreeze(session.id, 'false')">
+                        <i class="glyphicon glyphicon-hand-left" > Unfreeze</i>
+                    </button>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <br><br>
+    <div class="col-sm-6 col-lg-offset-3"  ng-if="sessionTableDetailsVisible">
+
+        <br>
+        <div class="col-lg-1 col-lg-offset-5" ><b>Questions</b></div>
+        <br>
+        <table class="table table-bordered table-striped" style=" height: auto; margin: auto" name="questionsTable"
+              >
+            <tr>
+                <th>#ID</th>
+                <th>Question</th>
+                <th>Question Type</th>
+                <th>Question Default Answers</th>
+            </tr>
+            <tr ng-repeat="question in questionsBySessionId">
+                <th scope="row" width="5%">{{question.id}}</th>
+                <td width="50%">{{question.question_text}}</td>
+                <td width="10%">{{question.question_type}}</td>
+                <td width="35%">{{question.default_answers}}</td>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <div class="col-sm-2 col-lg-offset-5" ng-if="sessionTableDetailsVisible">
+        <br>
+        <div class="col-lg-1 col-lg-offset-3"><b>Participants</b></div>
+        <br>
+        <table class="table table-bordered table-striped"  style=" height: auto; margin: auto" name="questionsTable">
+            <tr>
+                <th>#ID</th>
+                <th>Participant Email</th>
+
+            </tr>
+            <tr ng-repeat="participant in participantsBySessionId">
+                <td width="5%">{{participant.id}}</td>
+                <td width="20">{{participant.email}}</td>
+            </tr>
+        </table>
+        <div align="center" class="row"><br>
+            <button type="button" class="btn btn-primary " ng-if="buttonVisible" ng-click="setSessionTableVisible();setButtonVisible()" align="center">Hide details</button>
+        </div>
+    </div>
+
+</div>
+
+<div class="col-sm-6 col-lg-offset-6"><br>
+    <button type="button" class="btn btn-primary " ng-click="backToSession()" align="center">Back</button>
+</div>
+
+</body>
+</html>

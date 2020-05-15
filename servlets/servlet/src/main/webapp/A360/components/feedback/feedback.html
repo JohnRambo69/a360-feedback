@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>A360 Feedback</title>
+</head>
+
+<body data-ng-controller="FeedbackController">
+
+<div name="header" class="well">
+    <h1 align="center" data-ng-model="participantEmail">Feedback for: {{participantEmail}}</h1>
+</div>
+<div ng-controller="FeedbackController" ng-if="!sessionIsFreeze"  name="myForm" novalidate ng-form>
+        <div class="form-row text-center" align="left" style="border: #1E1E1E">
+            <table class="table" style="width: auto; height: auto; margin: auto; border: none" algin="left" >
+                <tr  data-ng-repeat="question in questions">
+                    <td width="300" style="border: none">
+                        {{question.question_text}}
+                    </td>
+                    <td width="300" style="border: none; height: 50%">
+                        <div data-ng-if="question.question_type =='TEXT'">
+                    <textarea class="form-control"  maxlength="1000" data-ng-model="question.answer"
+                              style="resize: none;"></textarea>
+                        </div>
+                        <div data-ng-if="question.question_type =='RADIO'">
+                            <form>
+                                <div data-ng-repeat="answerValue in question.default_answers">
+                                    <input type="radio" data-ng-value="answerValue.value" id="{{answerValue.value}}"
+                                           data-ng-model="question.answer" checked>
+                                    <label for="{{answerValue.value}}">{{answerValue.value}}</label>
+                                </div>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            </div>
+    <div class="form-inline text-center" align="centre" style="margin: auto">
+        <button type="button" id="btnSubmit" class="btn btn-primary " ng-click="dataLoading = true;createAnswerJson(); redirectToFeedbackResponse()"
+             ng-disabled="checkIsAllAnswerNotNull()" >Submit</button>
+        <img ng-if="dataLoading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+    </div>
+
+    <div ng-if="checkIsAllAnswerNotNull()" style="width : 20%" align="centre"
+         class="alert alert-info center-block text-center" >All fields are mandatory.
+    </div>
+
+    <div ng-if="feedbackSendOk == 200" id="myAlert" class="alert-success collapse"  style="width:15%" align="centre">
+        <a id="linkClose" href="#" class="close">&times;</a>
+        <strong>Succes</strong>
+
+    </div>
+
+    <div>
+    </div>
+    </div>
+<div class="col-lg-3 col-lg-offset-5" ng-if="sessionIsFreeze">
+    <h2>Upps ! Session is freezer.</h2>
+</div>
+
+</body>
+</html>
